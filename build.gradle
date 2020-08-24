@@ -1,0 +1,11 @@
+subprojects {
+    group 'org.acme'
+    version '999-SNAPSHOT'
+	
+	repositories {
+		mavenLocal()
+		jcenter()
+		//mavenCentral()
+	}
+}
+

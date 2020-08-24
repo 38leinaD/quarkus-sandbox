@@ -1,0 +1,70 @@
+
+# Compiled class file
+*.class
+
+# Log file
+*.log
+
+# Package Files #
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+hs_err_pid*
+
+### Gradle ###
+.gradle/
+build/
+**/logs
+
+### Eclipse ###
+.classpath
+.project
+.settings/
+bin/
+.faces-config.xml.jsfdia
+
+##Generated files
+generated/
+version.inf
+journal.files
+
+# Avoid ignoring Gradle wrapper jar file (.jar files are usually ignored)
+!gradle-wrapper.jar
+
+# Cache of project
+.gradletasknamecache
+/.settings/
+
+bin/
+**/out/
+**/.factorypath
+
+/serverkernel-ocmui/temp_properties/
+/serverkernel-ocmui/classes/
+**/tmp_xslt/
+
+#unignore some files
+!**/cygwin/bin
+!**/src/main/**/build
+!**/src/main/runtime/**/bin
+!**/src/extension/runtime/**/bin
+!**/src/main/dist/**/bin
+!gradle/wrapper/*
+
+# IntelliJ
+/.idea/
+*.iml
+
+**/.sass-cache/
+
+# Powerdesigner
+*ddl/**/model/*.pdb
+*ddl/**/model/*.cdb
+
+# testing
+*/test-output

@@ -1,0 +1,6 @@
+---
+metadata: {}
+group-id: "org.acme"
+artifact-id: "extension"
+version: "999-SNAPSHOT"
+name: "app-extension"
