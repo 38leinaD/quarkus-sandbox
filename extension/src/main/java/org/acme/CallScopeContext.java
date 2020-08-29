@@ -35,9 +35,8 @@ public class CallScopeContext implements InjectableContext { // InjectableContex
 		}
 
 		@SuppressWarnings("unchecked")
-		ContextInstanceHandle<T> contextInstanceHandle = (ContextInstanceHandle<T>) activeScope.computeIfAbsent(
-				contextual,
-				c -> {
+		ContextInstanceHandle<T> contextInstanceHandle = (ContextInstanceHandle<T>) activeScope
+				.computeIfAbsent(contextual, c -> {
 					if (creationalContext == null) {
 						return null;
 					}
@@ -55,7 +54,7 @@ public class CallScopeContext implements InjectableContext { // InjectableContex
 		if (activeScope == null) {
 			throw new ContextNotActiveException();
 		}
-		
+
 		@SuppressWarnings("unchecked")
 		ContextInstanceHandle<T> contextInstanceHandle = (ContextInstanceHandle<T>) activeScope.get(contextual);
 
@@ -80,51 +79,52 @@ public class CallScopeContext implements InjectableContext { // InjectableContex
 	}
 
 	/**
-	 *  Two methods below are specific to Quarkus because defined on InjectableContext.
+	 * Two methods below are specific to Quarkus because defined on
+	 * InjectableContext.
 	 */
-	
+
 	@Override
 	public void destroy() {
-        Map<Contextual<?>, ContextInstanceHandle<?>> context = ACTIVE_SCOPE_ON_THREAD.get();
-        if (context == null) {
-            throw new ContextNotActiveException();
-        }
-        context.values().forEach(ContextInstanceHandle::destroy);
+		Map<Contextual<?>, ContextInstanceHandle<?>> context = ACTIVE_SCOPE_ON_THREAD.get();
+		if (context == null) {
+			throw new ContextNotActiveException();
+		}
+		context.values().forEach(ContextInstanceHandle::destroy);
 	}
 
 	@Override
 	public ContextState getState() {
 		return new ContextState() {
 
-            @Override
-            public Map<InjectableBean<?>, Object> getContextualInstances() {
-        		Map<Contextual<?>, ContextInstanceHandle<?>> activeScope = ACTIVE_SCOPE_ON_THREAD.get();
+			@Override
+			public Map<InjectableBean<?>, Object> getContextualInstances() {
+				Map<Contextual<?>, ContextInstanceHandle<?>> activeScope = ACTIVE_SCOPE_ON_THREAD.get();
 
-                if (activeScope != null) {
-                    return activeScope.values().stream()
-                            .collect(Collectors.toMap(ContextInstanceHandle::getBean, ContextInstanceHandle::get));
-                }
-                return Collections.emptyMap();
-            }
-        };
+				if (activeScope != null) {
+					return activeScope.values().stream()
+							.collect(Collectors.toMap(ContextInstanceHandle::getBean, ContextInstanceHandle::get));
+				}
+				return Collections.emptyMap();
+			}
+		};
 	}
-	
+
 	/**
 	 * Own API
 	 */
 	private final static CallScopeContext INSTANCE = new CallScopeContext();
-	
+
 	public static CallScopeContext get() {
 		return INSTANCE;
 	}
-	
+
 	public void enter() {
 		Map<Contextual<?>, ContextInstanceHandle<?>> activeScope = ACTIVE_SCOPE_ON_THREAD.get();
 
 		if (activeScope != null) {
 			throw new IllegalStateException("An instance of this scope is already active");
 		}
-		
+
 		ACTIVE_SCOPE_ON_THREAD.set(new ConcurrentHashMap<>());
 	}
 
@@ -134,16 +134,15 @@ public class CallScopeContext implements InjectableContext { // InjectableContex
 		if (activeScope == null) {
 			throw new IllegalStateException("Scope currently not active");
 		}
-		
+
 		ACTIVE_SCOPE_ON_THREAD.set(null);
 	}
-	
+
 	public <R> R with(Supplier<R> f) {
 		try {
 			this.enter();
 			return f.get();
-		}
-		finally {
+		} finally {
 			this.exit();
 		}
 	}
