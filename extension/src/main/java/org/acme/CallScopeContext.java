@@ -10,6 +10,8 @@ import java.util.stream.Collectors;
 import javax.enterprise.context.ContextNotActiveException;
 import javax.enterprise.context.spi.Contextual;
 import javax.enterprise.context.spi.CreationalContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import io.quarkus.arc.ContextInstanceHandle;
 import io.quarkus.arc.InjectableBean;
@@ -83,7 +85,11 @@ public class CallScopeContext implements InjectableContext { // InjectableContex
 	
 	@Override
 	public void destroy() {
-		// TODO What does it mean? Destroy ALL? Or destroy all for the active scope?
+        Map<Contextual<?>, ContextInstanceHandle<?>> context = ACTIVE_SCOPE_ON_THREAD.get();
+        if (context == null) {
+            throw new ContextNotActiveException();
+        }
+        context.values().forEach(ContextInstanceHandle::destroy);
 	}
 
 	@Override
